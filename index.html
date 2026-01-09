@@ -8,40 +8,114 @@
 
   <style>
     :root{
-      --bg:#ffffff;
       --text:#111827;
       --muted:#6b7280;
-      --line:#e5e7eb;
-      --link:#0A66C2; /* LinkedIn blue */
-      --chip:#f9fafb;
-      --chipText:#111827;
-      --chipBorder:#e5e7eb;
+      --line:rgba(255,255,255,.22);
+      --link:#0A66C2;
+
+      /* Glass */
+      --card-bg: rgba(255,255,255,0.72);
+      --card-border: rgba(255,255,255,0.35);
+      --card-shadow: 0 10px 30px rgba(0,0,0,.20);
+
+      /* Footer glass */
+      --footer-bg: rgba(255,255,255,0.55);
+      --footer-border: rgba(255,255,255,0.25);
+
+      --chip-bg: rgba(255,255,255,0.45);
+      --chip-border: rgba(255,255,255,0.22);
       --shadow: 0 8px 24px rgba(17,24,39,.06);
+
+      --bg-dim-1: rgba(0,0,0,.34);
+      --bg-dim-2: rgba(0,0,0,.70);
     }
 
     *{box-sizing:border-box}
+
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
-      background: var(--bg);
       color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Display", "SF Pro Text",
+                   "Segoe UI", Roboto, Helvetica, Arial, "Noto Sans", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background:#0b1020;
+      overflow-x:hidden;
     }
 
+    /* ===== Background slideshow (9 images) ===== */
+    .bg{
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      overflow:hidden;
+      background:#0b1020;
+    }
+    .bg-slide{
+      position:absolute;
+      inset:0;
+      background-size:cover;
+      background-position:center;
+      opacity:0;
+      transform:scale(1.03);
+      filter:saturate(1.05) contrast(1.02);
+      animation: fade 45s infinite;
+    }
+    /* Make sure images are in the same folder as index.html */
+    .bg-slide.s1{ background-image:url("./image_01.jpg"); animation-delay: 0s; }
+    .bg-slide.s2{ background-image:url("./image_02.jpg"); animation-delay: 5s; }
+    .bg-slide.s3{ background-image:url("./image_03.jpg"); animation-delay: 10s; }
+    .bg-slide.s4{ background-image:url("./image_04.jpg"); animation-delay: 15s; }
+    .bg-slide.s5{ background-image:url("./image_05.jpg"); animation-delay: 20s; }
+    .bg-slide.s6{ background-image:url("./image_06.jpg"); animation-delay: 25s; }
+    .bg-slide.s7{ background-image:url("./image_07.jpg"); animation-delay: 30s; }
+    .bg-slide.s8{ background-image:url("./image_08.jpg"); animation-delay: 35s; }
+    .bg-slide.s9{ background-image:url("./image_09.jpg"); animation-delay: 40s; }
+
+    @keyframes fade{
+      0%   { opacity:0; }
+      6%   { opacity:.62; }
+      18%  { opacity:.62; }
+      24%  { opacity:0; }
+      100% { opacity:0; }
+    }
+
+    /* Dark overlay for readability */
+    .bg::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(ellipse at center, var(--bg-dim-1), var(--bg-dim-2));
+      z-index:1;
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .bg-slide{ animation:none !important; opacity:.62 !important; }
+    }
+
+    /* ===== Layout ===== */
     .wrap{
       min-height:100vh;
       display:flex;
       align-items:center;
       justify-content:center;
       padding: 28px 18px;
+
+      /* Reserve space so the fixed footer never covers content */
+      padding-bottom: calc(140px + env(safe-area-inset-bottom));
     }
 
     .card{
       width: min(520px, 100%);
-      border: 1px solid var(--line);
       border-radius: 18px;
-      box-shadow: var(--shadow);
       padding: 22px 20px;
-      background:#fff;
+
+      background: var(--card-bg);
+      backdrop-filter: blur(14px) saturate(1.2);
+      -webkit-backdrop-filter: blur(14px) saturate(1.2);
+
+      border: 1px solid var(--card-border);
+      box-shadow: var(--card-shadow);
     }
 
     .top{
@@ -54,7 +128,7 @@
     .lang{
       display:flex;
       gap:10px;
-      font-size: 13px;
+      font-size:13px;
       user-select:none;
       white-space:nowrap;
     }
@@ -67,7 +141,7 @@
     }
     .lang button.active{
       color: var(--text);
-      font-weight: 600;
+      font-weight: 700;
       text-decoration: underline;
       text-underline-offset: 4px;
     }
@@ -87,7 +161,7 @@
 
     .divider{
       height:1px;
-      background: var(--line);
+      background: rgba(17,24,39,.12);
       margin: 16px 0;
     }
 
@@ -106,8 +180,8 @@
       justify-content:space-between;
       gap: 14px;
       padding: 10px 12px;
-      border: 1px solid var(--chipBorder);
-      background: var(--chip);
+      border: 1px solid var(--chip-border);
+      background: var(--chip-bg);
       border-radius: 12px;
     }
 
@@ -147,8 +221,8 @@
       gap:8px;
       padding: 11px 12px;
       border-radius: 12px;
-      border: 1px solid var(--chipBorder);
-      background: #fff;
+      border: 1px solid rgba(10,102,194,.22);
+      background: rgba(255,255,255,.40);
       color: var(--text);
       cursor:pointer;
       text-decoration:none;
@@ -158,34 +232,112 @@
 
     .btn.primary{
       border-color: rgba(10,102,194,.35);
-      background: rgba(10,102,194,.06);
+      background: rgba(10,102,194,.10);
     }
 
-    .foot{
+    .footnote{
       margin-top: 10px;
       color: var(--muted);
       font-size: 12px;
       line-height: 1.4;
     }
 
+    /* ===== Fixed footer with logos + copyright ===== */
+    .footer{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(10px + env(safe-area-inset-bottom));
+      width: min(520px, calc(100% - 36px));
+      z-index: 10;
+
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap: 8px;
+
+      padding: 12px 12px 10px 12px;
+      border-radius: 16px;
+
+      background: var(--footer-bg);
+      backdrop-filter: blur(12px) saturate(1.2);
+      -webkit-backdrop-filter: blur(12px) saturate(1.2);
+
+      border: 1px solid var(--footer-border);
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+    }
+
+    .logos{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .logo{
+      display:block;
+      height: 44px; /* base height (desktop) */
+      width: auto;
+      max-width: 46%;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 10px rgba(0,0,0,.12));
+    }
+
+    /* Make EMR badge slightly smaller so it feels secondary */
+    .logo.emr{ height: 40px; opacity: .98; }
+
+    .copyright{
+      text-align:center;
+      font-size: 12px;
+      color: rgba(17,24,39,.78);
+      line-height: 1.35;
+      padding: 0 6px;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 420px){
+      .logo{ height: 36px; }
+      .logo.emr{ height: 34px; }
+      .copyright{ font-size: 11px; }
+      .wrap{ padding-bottom: calc(126px + env(safe-area-inset-bottom)); }
+    }
+
+    /* Dark mode */
     @media (prefers-color-scheme: dark){
       :root{
-        --bg:#0b1020;
         --text:#e5e7eb;
-        --muted:#9ca3af;
-        --line:#1f2937;
-        --chip:#0f172a;
-        --chipText:#e5e7eb;
-        --chipBorder:#1f2937;
-        --shadow: 0 10px 28px rgba(0,0,0,.35);
+        --muted:#cbd5e1;
+        --card-bg: rgba(17, 24, 39, 0.62);
+        --card-border: rgba(255,255,255,0.10);
+        --footer-bg: rgba(17, 24, 39, 0.52);
+        --footer-border: rgba(255,255,255,0.08);
+        --chip-bg: rgba(17, 24, 39, 0.40);
+        --chip-border: rgba(255,255,255,0.10);
+        --bg-dim-1: rgba(0,0,0,.30);
+        --bg-dim-2: rgba(0,0,0,.78);
       }
-      .card{background:#0b1020;}
-      .btn{background:#0b1020;color:var(--text);}
+      .divider{ background: rgba(255,255,255,.10); }
+      .copyright{ color: rgba(229,231,235,.85); }
+      .btn{ background: rgba(17,24,39,.35); }
     }
   </style>
 </head>
 
 <body>
+  <!-- Background slideshow -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg-slide s1"></div>
+    <div class="bg-slide s2"></div>
+    <div class="bg-slide s3"></div>
+    <div class="bg-slide s4"></div>
+    <div class="bg-slide s5"></div>
+    <div class="bg-slide s6"></div>
+    <div class="bg-slide s7"></div>
+    <div class="bg-slide s8"></div>
+    <div class="bg-slide s9"></div>
+  </div>
+
   <div class="wrap">
     <main class="card" aria-label="Digital business card">
       <div class="top">
@@ -233,11 +385,24 @@
         <a class="btn" href="mailto:cater_leo@163.com" id="btn-email">Compose Email</a>
       </div>
 
-      <div class="foot" id="footnote">
+      <div class="footnote" id="footnote">
         Tip: “Add to Contacts” downloads a vCard (.vcf). Open it on your phone to save.
       </div>
     </main>
   </div>
+
+  <!-- Fixed footer (always visible) -->
+  <footer class="footer" aria-label="Logos and copyright">
+    <div class="logos">
+      <!-- Personal signature logo first -->
+      <img class="logo personal" src="./Logo.png" alt="Personal signature logo" />
+      <!-- EMR logo second -->
+      <img class="logo emr" src="./CRC_EMR_LOGO.png" alt="CRC Emergency Medical Responder badge" />
+    </div>
+    <div class="copyright" id="copyright">
+      Background photos © LEO Zhang. All rights reserved. No unauthorized use or reproduction.
+    </div>
+  </footer>
 
   <script>
     function setLang(lang){
@@ -259,6 +424,9 @@
 
         document.getElementById('footnote').textContent =
           'Tip: “Add to Contacts” downloads a vCard (.vcf). Open it on your phone to save.';
+
+        document.getElementById('copyright').textContent =
+          'Background photos © LEO Zhang. All rights reserved. No unauthorized use or reproduction.';
       } else {
         document.documentElement.lang = 'zh-CN';
         document.getElementById('name').textContent = '张 Leo';
@@ -273,6 +441,9 @@
 
         document.getElementById('footnote').textContent =
           '提示：点击“保存到通讯录”会下载联系人名片（.vcf），在手机上打开即可添加联系人。';
+
+        document.getElementById('copyright').textContent =
+          '背景图片版权归 LEO Zhang 所有。未经授权，任何人不得盗取、转载或用于其他用途。';
       }
     }
   </script>
