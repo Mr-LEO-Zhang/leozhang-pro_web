@@ -82,12 +82,16 @@
     }
 
     .card{
-      width: 100%;
-      background: var(--card-bg);
-      border-radius: 28px;
-      padding: 16px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.14);
-    }
+  width: 100%;
+  background: rgba(255, 252, 237, 0.8);   /* 20%透明 */
+  border-radius: 28px;
+  padding: 16px;
+
+  /* 右下方向阴影 */
+  box-shadow:
+    12px 12px 30px rgba(0,0,0,0.35),
+    0 6px 12px rgba(0,0,0,0.18);
+}
 
     .card-inner{
       border: 1.8px solid var(--card-border);
@@ -150,23 +154,22 @@
     }
 
     .logo-wrap{
-      position: absolute;
-      left: 50%;
-      bottom: 3.8vh;
-      transform: translateX(-50%);
-      z-index: 3;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: min(42vw, 220px);
-      max-width: 42%;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(255, 252, 237, 0.78);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    }
+  position: absolute;
+  left: 50%;
+  bottom: 3.8vh;
+  transform: translateX(-50%);
+  z-index: 3;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: min(42vw, 220px);
+  max-width: 42%;
+
+  /* 删除背景 */
+  background: transparent;
+}
 
     .logo{
       display: block;
