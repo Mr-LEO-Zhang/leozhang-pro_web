@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PB&J Cookies</title>
+
+<style>
+
+:root{
+--bg-side:#2f2f2f;
+--overlay:rgba(120,120,120,0.22);
+--card-bg:rgba(255,252,237,0.8);
+--card-border:rgb(67,44,21);
+--text-main:rgb(67,44,21);
+}
+
+*{box-sizing:border-box;}
+
+html,body{
+margin:0;
+height:100%;
+background:var(--bg-side);
+overflow:hidden;
+color:var(--text-main);
+}
+
+body{
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+/* 竖版画布 */
+
+.stage{
+position:relative;
+height:100vh;
+aspect-ratio:2/3;
+max-width:100vw;
+overflow:hidden;
+}
+
+/* 背景 */
+
+.bg{
+position:absolute;
+inset:0;
+background-image:url("./Image1.png");
+background-size:cover;
+background-position:center;
+}
+
+.bg::after{
+content:"";
+position:absolute;
+inset:0;
+background:var(--overlay);
+}
+
+/* 内容 */
+
+.content{
+position:absolute;
+inset:0;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:7vh 4vw 14vh;
+}
+
+/* 卡片 */
+
+.card{
+width:100%;
+background:var(--card-bg);
+border-radius:28px;
+padding:16px;
+box-shadow:
+14px 14px 34px rgba(0,0,0,0.35),
+0 6px 12px rgba(0,0,0,0.18);
+backdrop-filter:blur(3px);
+}
+
+.card-inner{
+border:1.8px solid var(--card-border);
+border-radius:22px;
+padding:22px;
+}
+
+/* 标题 */
+
+.title{
+font-family:"STLiti","华文隶书","LiSu",serif;
+font-size:clamp(28px,5vw,40px);
+text-align:center;
+white-space:nowrap;
+margin-bottom:20px;
+}
+
+/* 副标题 */
+
+.label{
+font-family:"SimHei","黑体","Microsoft YaHei",sans-serif;
+font-size:clamp(16px,2.6vw,21px);
+margin-top:16px;
+}
+
+/* 正文 */
+
+.value{
+font-family:"STKaiti","华文楷体","KaiTi","楷体",serif;
+font-size:clamp(14px,2.3vw,18px);
+line-height:1.75;
+margin-top:6px;
+word-break:break-word;
+}
+
+/* Logo */
+
+.logo{
+position:absolute;
+bottom:4vh;
+left:50%;
+transform:translateX(-50%);
+width:min(42vw,220px);
+filter:drop-shadow(0 4px 12px rgba(0,0,0,0.35));
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="stage">
+
+<div class="bg"></div>
+
+<div class="content">
+
+<div class="card">
+<div class="card-inner">
+
+<div class="title">
+PB&J Cookies
+</div>
+
+<div class="label">Ingredients:</div>
+<div class="value">
+Flour, Peanut Butter, Butter, Sugar, Egg, Strawberry Jam (Fresh Strawberry, Sugar, Lemon Juice, Citric Acid), Baking Powder, Baking Soda, Real Vanilla Extract
+</div>
+
+<div class="label">Allergen:</div>
+<div class="value">
+Peanut, Gluten, Diary, Egg, Vanilla
+</div>
+
+<div class="label">BBD:</div>
+<div class="value">
+5 Days under room tempreture.
+</div>
+
+</div>
+</div>
+
+</div>
+
+<img class="logo" src="../Logo.png">
+
+</div>
+
+</body>
+</html>
