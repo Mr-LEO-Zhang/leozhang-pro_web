@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poster | Tea Timing Project</title>
+
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#f5f1e8;
+  text-align:center;
+}
+
+/* 顶部标题 */
+.header{
+  padding:20px;
+}
+
+h1{
+  margin:10px 0;
+}
+
+p{
+  color:#666;
+}
+
+/* 图片容器 */
+.poster-container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+/* poster 样式 */
+.poster{
+  max-width:95%;
+  height:auto;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.15);
+  user-select:none;
+  -webkit-user-drag:none;
+  pointer-events:auto;
+}
+
+/* 禁止右键菜单 */
+body{
+  -webkit-touch-callout:none;
+}
+
+.footer{
+  margin:30px 20px;
+  font-size:12px;
+  color:#777;
+  line-height:1.6;
+}
+</style>
+
+</head>
+
+<body oncontextmenu="return false;">
+
+<div class="header">
+  <h1>Research Poster</h1>
+  <p>For viewing only – part of an academic presentation</p>
+</div>
+
+<div class="poster-container">
+  <img 
+    src="CapstonePresentPoster.png" 
+    class="poster"
+    draggable="false"
+  >
+</div>
+
+<div class="footer">
+  This poster is provided for viewing only as part of an academic project.<br>
+  Downloading, copying, or redistribution is discouraged.<br>
+  © 2026 Leo Zhang & Han Yao
+</div>
+
+</body>
+</html>
