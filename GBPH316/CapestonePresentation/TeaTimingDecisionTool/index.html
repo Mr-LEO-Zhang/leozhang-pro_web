@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tea Timing Decision Tool</title>
+  <style>
+    :root{
+      --bg-1:#f6f1e6;
+      --bg-2:#e9efe5;
+      --card:rgba(255,252,237,0.88);
+      --border:#432c15;
+      --text:#2e251b;
+      --muted:#6d5f50;
+      --green:#365c3d;
+      --green-soft:#e4f0e4;
+      --red:#8a3b35;
+      --red-soft:#f7e4e2;
+      --blue:#365a7a;
+      --blue-soft:#e6eef6;
+      --gold:#b38a3a;
+      --amber:#b97a22;
+      --amber-soft:#fff1d8;
+      --shadow:10px 12px 0 rgba(67,44,21,0.18);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.55), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.4), transparent 25%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px 16px;
+    }
+
+    .page{
+      width:min(1100px,100%);
+      position:relative;
+    }
+
+    .card{
+      background:var(--card);
+      border:3px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(6px);
+      overflow:hidden;
+    }
+
+    .app{
+      display:grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      min-height:760px;
+    }
+
+    .panel-left{
+      padding:38px 34px 30px;
+      border-right:2px solid rgba(67,44,21,0.16);
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      position:relative;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      width:max-content;
+      padding:8px 14px;
+      border-radius:999px;
+      border:1px solid rgba(67,44,21,0.18);
+      background:rgba(255,255,255,0.4);
+      font-size:13px;
+      color:var(--muted);
+      letter-spacing:0.2px;
+    }
+
+    h1{
+      margin:0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size:clamp(30px,5vw,46px);
+      line-height:1.05;
+      color:var(--border);
+    }
+
+    .subtitle{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.55;
+      max-width:58ch;
+    }
+
+    .flow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:6px;
+    }
+
+    .chip{
+      border-radius:999px;
+      padding:9px 14px;
+      font-size:13px;
+      font-weight:700;
+      background:rgba(255,255,255,0.58);
+      border:1px solid rgba(67,44,21,0.14);
+      color:var(--border);
+    }
+
+    .progress-wrap{
+      margin-top:8px;
+    }
+
+    .progress-label{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    .progress{
+      width:100%;
+      height:12px;
+      border-radius:999px;
+      background:rgba(67,44,21,0.08);
+      overflow:hidden;
+    }
+
+    .progress-fill{
+      height:100%;
+      width:25%;
+      background:linear-gradient(90deg, #7aa06d, #4e7a59);
+      border-radius:999px;
+      transition:width .35s ease;
+    }
+
+    .question-box{
+      padding:22px;
+      border-radius:22px;
+      background:rgba(255,255,255,0.45);
+      border:1px solid rgba(67,44,21,0.12);
+    }
+
+    .step-title{
+      margin:0 0 8px 0;
+      font-size:14px;
+      letter-spacing:0.3px;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .question{
+      margin:0 0 18px 0;
+      font-size:27px;
+      line-height:1.18;
+      font-weight:800;
+      color:var(--text);
+    }
+
+    .options{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+
+    .option{
+      width:100%;
+      text-align:left;
+      padding:16px 18px;
+      border-radius:18px;
+      border:2px solid rgba(67,44,21,0.14);
+      background:#fffdfa;
+      color:var(--text);
+      cursor:pointer;
+      transition:.2s ease;
+      font-size:16px;
+      font-weight:700;
+    }
+
+    .option small{
+      display:block;
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:500;
+      line-height:1.45;
+    }
+
+    .option:hover{
+      transform:translateY(-1px);
+      border-color:rgba(67,44,21,0.28);
+      box-shadow:0 8px 18px rgba(67,44,21,0.08);
+    }
+
+    .option.selected{
+      border-color:var(--border);
+      background:#fff7df;
+      box-shadow:0 8px 18px rgba(67,44,21,0.08);
+    }
+
+    .actions{
+      display:flex;
+      gap:12px;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      border-radius:16px;
+      padding:14px 18px;
+      font-size:15px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .btn-primary{
+      background:var(--border);
+      color:#fffaf3;
+    }
+
+    .btn-primary:hover{ filter:brightness(1.05); }
+    .btn-secondary{
+      background:rgba(67,44,21,0.08);
+      color:var(--border);
+    }
+
+    .btn[disabled]{
+      opacity:.45;
+      cursor:not-allowed;
+    }
+
+    .helper{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .panel-right{
+      padding:34px 28px 28px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      background:rgba(255,255,255,0.18);
+    }
+
+    .mini-card{
+      padding:18px 18px 16px;
+      border-radius:20px;
+      background:rgba(255,255,255,0.45);
+      border:1px solid rgba(67,44,21,0.12);
+    }
+
+    .mini-card h2{
+      margin:0 0 10px 0;
+      font-size:18px;
+      color:var(--border);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .mini-card p{
+      margin:0;
+      font-size:14px;
+      line-height:1.6;
+      color:var(--muted);
+    }
+
+    .result-card{
+      display:none;
+      gap:14px;
+      grid-template-columns:1fr;
+    }
+
+    .result-card.visible{
+      display:grid;
+    }
+
+    .result-hero{
+      padding:22px;
+      border-radius:22px;
+      border:2px solid rgba(67,44,21,0.12);
+      background:#fffdf7;
+    }
+
+    .result-hero .label{
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      letter-spacing:0.3px;
+      text-transform:uppercase;
+      background:rgba(67,44,21,0.08);
+      color:var(--muted);
+      margin-bottom:12px;
+    }
+
+    .result-hero h3{
+      margin:0 0 8px 0;
+      font-size:30px;
+      line-height:1.15;
+      color:var(--border);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .result-hero p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:15px;
+    }
+
+    .risk-strip{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .risk-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.2px;
+      border:1px solid rgba(67,44,21,0.12);
+    }
+
+    .risk-low{
+      background:var(--green-soft);
+      color:var(--green);
+    }
+
+    .risk-moderate{
+      background:var(--amber-soft);
+      color:var(--amber);
+    }
+
+    .risk-high{
+      background:var(--red-soft);
+      color:var(--red);
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .box{
+      padding:18px;
+      border-radius:20px;
+      border:1px solid rgba(67,44,21,0.1);
+      background:#fffdf7;
+    }
+
+    .box.green{ background:var(--green-soft); }
+    .box.red{ background:var(--red-soft); }
+    .box.blue{ background:var(--blue-soft); }
+
+    .box h4{
+      margin:0 0 10px 0;
+      font-size:17px;
+      color:var(--text);
+    }
+
+    .box p{
+      margin:0;
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .box ul{
+      margin:0;
+      padding-left:18px;
+      line-height:1.7;
+      font-size:14px;
+      color:var(--text);
+    }
+
+    .recommendation{
+      font-size:16px;
+      line-height:1.7;
+    }
+
+    .tea-tag{
+      display:inline-block;
+      margin:4px 8px 0 0;
+      padding:8px 11px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:700;
+      background:rgba(255,255,255,0.55);
+      border:1px solid rgba(67,44,21,0.12);
+    }
+
+    .closing{
+      padding:18px 20px;
+      border-radius:20px;
+      background:rgba(255,255,255,0.55);
+      border:1px dashed rgba(67,44,21,0.22);
+      color:var(--border);
+      font-size:15px;
+      line-height:1.65;
+    }
+
+    .credit{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:auto;
+    }
+
+    .hidden{
+      display:none !important;
+    }
+
+    @media (max-width: 900px){
+      .app{
+        grid-template-columns:1fr;
+      }
+      .panel-left{
+        border-right:none;
+        border-bottom:2px solid rgba(67,44,21,0.16);
+      }
+      .grid-2{
+        grid-template-columns:1fr;
+      }
+      .question{
+        font-size:24px;
+      }
+    }
+
+    @media (max-width: 560px){
+      body{
+        padding:12px;
+      }
+      .panel-left, .panel-right{
+        padding:22px 18px;
+      }
+      .question{
+        font-size:22px;
+      }
+      .option{
+        padding:14px 14px;
+      }
+      .result-hero h3{
+        font-size:26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="card app">
+      <section class="panel-left">
+        <div class="eyebrow">Interactive capstone tool • Tea timing</div>
+        <div>
+          <h1>Find Your Best Tea Timing ☕</h1>
+          <p class="subtitle">
+            Choose your goal, your tea timing, and your tea style.
+            You will receive gentle, practical guidance about what may be happening in your body, why it matters, and what you can do next.
+          </p>
+        </div>
+
+        <div class="flow" aria-label="journey overview">
+          <span class="chip">Goal</span>
+          <span class="chip">Timing</span>
+          <span class="chip">Tea Style</span>
+          <span class="chip">Feedback</span>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span id="progressText">Step 1 of 4</span>
+            <span id="progressHint">Choose your main goal</span>
+          </div>
+          <div class="progress">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div class="question-box" id="questionBox">
+          <p class="step-title" id="stepTitle">Step 1</p>
+          <h2 class="question" id="questionText">What is your main health goal?</h2>
+          <div class="options" id="optionsContainer"></div>
+
+          <div class="actions">
+            <button class="btn btn-secondary" id="backBtn" disabled>Back</button>
+            <button class="btn btn-primary" id="nextBtn" disabled>Next</button>
+            <button class="btn btn-secondary hidden" id="restartBtnLeft">Start Again</button>
+          </div>
+
+          <p class="helper" id="helperText">
+            Pick the option that best matches your current priority.
+          </p>
+        </div>
+      </section>
+
+      <aside class="panel-right">
+        <div class="mini-card" id="previewCard">
+          <h2>How this tool works</h2>
+          <p>
+            Small changes in tea timing and strength can shift the balance between potential benefit and potential risk.
+            This tool translates that idea into a quick personal result.
+          </p>
+        </div>
+
+        <div class="mini-card">
+          <h2>What this result is based on</h2>
+          <p>
+            Tea may support glucose control, digestion, or post-meal relaxation, but it may also reduce iron absorption
+            or increase caffeine-related discomfort. Your result reflects that trade-off.
+          </p>
+        </div>
+
+        <div class="result-card" id="resultCard" aria-live="polite">
+          <div class="result-hero">
+            <span class="label">Your tea strategy</span>
+            <h3 id="resultHeadline">Best timing for you: 45–60 minutes after meals</h3>
+            <p id="resultSummary">
+              A balanced choice for most people who want a healthy tea habit without focusing on a single medical priority.
+            </p>
+            <div class="risk-strip">
+              <span class="risk-badge risk-low" id="riskBadge">Low risk</span>
+              <span id="riskContext" class="helper">A lower level of concern based on your current combination.</span>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="box green">
+              <h4>What’s happening</h4>
+              <p id="whatText"></p>
+            </div>
+
+            <div class="box red">
+              <h4>Why it matters</h4>
+              <p id="whyText"></p>
+            </div>
+          </div>
+
+          <div class="box blue">
+            <h4>What you can do</h4>
+            <div class="recommendation" id="recommendationText"></div>
+            <div style="margin-top:12px" id="teaTags"></div>
+          </div>
+
+          <div class="closing" id="closingText">
+            Tea is not simply healthy or unhealthy — its value depends on timing, purpose, and the individual.
+          </div>
+        </div>
+
+        <p class="credit">
+          Classroom version: ideal for QR code use during a poster presentation or as a simple demo on a phone.
+        </p>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const steps = [
+      {
+        id: "goal",
+        stepTitle: "Step 1",
+        question: "What is your main health goal?",
+        helper: "Pick the option that best matches your current priority.",
+        hint: "Choose your main goal",
+        options: [
+          {
+            value: "bloodSugar",
+            label: "Improve blood sugar control",
+            description: "You want tea to support post-meal glucose response and metabolic health."
+          },
+          {
+            value: "iron",
+            label: "Support iron absorption",
+            description: "You want to reduce the chance of tea interfering with iron uptake from food."
+          },
+          {
+            value: "general",
+            label: "Maintain a balanced tea habit",
+            description: "You want a practical routine that works for everyday life."
+          }
+        ]
+      },
+      {
+        id: "timing",
+        stepTitle: "Step 2",
+        question: "When do you usually drink tea after a meal?",
+        helper: "Choose the timing that is closest to your real habit.",
+        hint: "Choose your timing",
+        options: [
+          { value: "immediate", label: "Immediately (0–15 min)", description: "Tea becomes part of the meal ending or comes right away." },
+          { value: "soon", label: "Soon after (~30 min)", description: "You wait a little, but still drink it close to the meal." },
+          { value: "balanced", label: "Later (45–60 min)", description: "You usually leave a moderate gap after eating." },
+          { value: "late", label: "Much later (1+ hour)", description: "Tea is clearly separated from the meal." }
+        ]
+      },
+      {
+        id: "style",
+        stepTitle: "Step 3",
+        question: "How do you usually drink your tea?",
+        helper: "Choose the tea style that is closest to your usual habit.",
+        hint: "Choose your tea style",
+        options: [
+          { value: "green", label: "Green tea", description: "Commonly chosen for a lighter profile and catechin-rich style." },
+          { value: "black", label: "Black tea", description: "A classic post-meal choice with a fuller taste." },
+          { value: "strong", label: "Strong tea", description: "More concentrated and often more intense on the body." },
+          { value: "light", label: "Light tea", description: "A gentler brew with a milder effect." },
+          { value: "sugary", label: "Tea with sugar", description: "Sweeter and easier to enjoy, but not always the healthiest choice." }
+        ]
+      }
+    ];
+
+    const state = {
+      currentStep: 0,
+      answers: { goal: null, timing: null, style: null }
+    };
+
+    const stepTitle = document.getElementById("stepTitle");
+    const questionText = document.getElementById("questionText");
+    const helperText = document.getElementById("helperText");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const nextBtn = document.getElementById("nextBtn");
+    const backBtn = document.getElementById("backBtn");
+    const restartBtnLeft = document.getElementById("restartBtnLeft");
+
+    const progressFill = document.getElementById("progressFill");
+    const progressText = document.getElementById("progressText");
+    const progressHint = document.getElementById("progressHint");
+
+    const previewCard = document.getElementById("previewCard");
+    const resultCard = document.getElementById("resultCard");
+    const resultHeadline = document.getElementById("resultHeadline");
+    const resultSummary = document.getElementById("resultSummary");
+    const riskBadge = document.getElementById("riskBadge");
+    const riskContext = document.getElementById("riskContext");
+    const whatText = document.getElementById("whatText");
+    const whyText = document.getElementById("whyText");
+    const recommendationText = document.getElementById("recommendationText");
+    const teaTags = document.getElementById("teaTags");
+
+    function renderStep() {
+      const step = steps[state.currentStep];
+      const answerKey = step.id;
+
+      stepTitle.textContent = step.stepTitle;
+      questionText.textContent = step.question;
+      helperText.textContent = step.helper;
+      progressText.textContent = `Step ${state.currentStep + 1} of 4`;
+      progressHint.textContent = step.hint;
+      progressFill.style.width = `${((state.currentStep + 1) / 4) * 100}%`;
+
+      optionsContainer.innerHTML = "";
+
+      step.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option";
+        btn.dataset.value = option.value;
+        if (state.answers[answerKey] === option.value) btn.classList.add("selected");
+        btn.innerHTML = `${option.label}<small>${option.description}</small>`;
+        btn.addEventListener("click", () => {
+          state.answers[answerKey] = option.value;
+          [...optionsContainer.children].forEach(el => el.classList.remove("selected"));
+          btn.classList.add("selected");
+          nextBtn.disabled = false;
+        });
+        optionsContainer.appendChild(btn);
+      });
+
+      nextBtn.disabled = !state.answers[answerKey];
+      backBtn.disabled = state.currentStep === 0;
+      nextBtn.textContent = state.currentStep === steps.length - 1 ? "See Result" : "Next";
+      restartBtnLeft.classList.add("hidden");
+
+      previewCard.classList.remove("hidden");
+      resultCard.classList.remove("visible");
+      nextBtn.classList.remove("hidden");
+    }
+
+    function buildRisk(goal, timing, style) {
+      let score = 0;
+
+      if (timing === "immediate") score += 2;
+      if (timing === "soon") score += 1;
+      if (style === "strong") score += 2;
+      if (style === "sugary") score += 1;
+
+      if (goal === "iron" && (timing === "immediate" || timing === "soon")) score += 2;
+      if (goal === "general" && timing === "immediate" && style === "strong") score += 1;
+      if (goal === "bloodSugar" && style === "sugary") score += 1;
+      if (goal === "iron" && style === "strong") score += 1;
+
+      if (score >= 5) {
+        return {
+          level: "High risk",
+          className: "risk-high",
+          context: "This combination carries a stronger trade-off and may need adjustment."
+        };
+      }
+      if (score >= 3) {
+        return {
+          level: "Moderate risk",
+          className: "risk-moderate",
+          context: "This combination can still work, but a few changes may make it gentler or safer."
+        };
+      }
+      return {
+        level: "Low risk",
+        className: "risk-low",
+        context: "This combination is relatively balanced based on your current selections."
+      };
+    }
+
+    function buildTags(goal, timing, style) {
+      const tags = [];
+      const goalMap = {
+        bloodSugar: "Blood sugar goal",
+        iron: "Iron priority",
+        general: "Balanced habit"
+      };
+      const timingMap = {
+        immediate: "Immediate tea",
+        soon: "~30 minutes",
+        balanced: "45–60 minutes",
+        late: "1+ hour"
+      };
+      const styleMap = {
+        green: "Green tea",
+        black: "Black tea",
+        strong: "Strong brew",
+        light: "Light brew",
+        sugary: "Contains sugar"
+      };
+      tags.push(goalMap[goal], timingMap[timing], styleMap[style]);
+      return tags;
+    }
+
+    function getResultData() {
+      const { goal, timing, style } = state.answers;
+      const risk = buildRisk(goal, timing, style);
+      const tags = buildTags(goal, timing, style);
+
+      let headline = "";
+      let summary = "";
+      let what = "";
+      let why = "";
+      let advice = "";
+
+      if (goal === "bloodSugar") {
+        if (timing === "immediate") {
+          headline = "Tea is reaching your body at the earliest post-meal stage";
+          summary = "This timing gives tea the strongest chance to interact with digestion right away.";
+          if (style === "strong") {
+            what = "You are drinking a concentrated tea at the same time your body is beginning to process carbohydrates. This is one of the strongest combinations for immediate post-meal interaction.";
+            why = "A stronger brew may help support blood sugar control, but it can also raise the chance of stomach discomfort, caffeine-related symptoms, and reduced iron absorption.";
+            advice = "If blood sugar support is your main goal, this approach can be useful, but keep an eye on how your body feels. If the tea feels harsh, try moving to a lighter brew or waiting a little longer after eating.";
+          } else if (style === "light") {
+            what = "You are still timing tea early enough to interact with digestion, but with a gentler brew.";
+            why = "This may still support blood sugar control while reducing the intensity of caffeine, stomach irritation, and excessive tannin exposure.";
+            advice = "This is a gentler version of an early tea habit. If comfort matters to you, this is a sensible choice. If you want a stronger glucose-focused effect, you could cautiously test a fuller brew.";
+          } else if (style === "sugary") {
+            what = "You are drinking tea at a time when it may influence glucose response, but added sugar changes that picture.";
+            why = "Tea may offer some metabolic support, yet the sugar in the drink can work against your goal by adding extra sweetness right after a meal.";
+            advice = "If blood sugar control matters most, consider reducing added sugar first. Keeping the same timing but switching to unsweetened tea may improve the value of this habit.";
+          } else if (style === "green") {
+            what = "You are using an early post-meal green tea routine, which places tea close to digestion.";
+            why = "Green tea is often chosen for metabolic support, but when consumed very early it can still increase the trade-off with iron absorption and sensitivity in some people.";
+            advice = "This can be a purposeful choice for glucose control. Stay with it if it feels comfortable, but do not ignore signs of stomach irritation or caffeine sensitivity.";
+          } else {
+            what = "You are drinking black tea immediately after eating, so tea is interacting with digestion from the start.";
+            why = "This timing may support glucose control, but it also increases the chance of iron interference and may feel stimulating in sensitive individuals.";
+            advice = "This approach can work if your main priority is glucose control. If you want a gentler version, consider waiting a little longer after meals.";
+          }
+        } else if (timing === "soon") {
+          headline = "Your tea still arrives during the main post-meal window";
+          summary = "This timing keeps tea close enough to digestion to support metabolic goals, but with slightly less intensity than immediate tea.";
+          if (style === "strong") {
+            what = "You are drinking a strong tea about 30 minutes after eating, when your body is still actively processing the meal.";
+            why = "This can be a strong metabolic-support pattern, but the concentrated brew still increases the chance of discomfort or reduced iron absorption.";
+            advice = "This is one of the more targeted choices for blood sugar support. If it feels too strong, keep the timing but soften the brew.";
+          } else if (style === "light") {
+            what = "You are matching an effective timing window with a milder tea strength.";
+            why = "This creates a useful balance: tea may still support glucose control, while the lighter brew may be easier on the stomach and nervous system.";
+            advice = "This is a practical and sustainable habit for many people. You can keep this pattern if it feels comfortable and consistent.";
+          } else if (style === "sugary") {
+            what = "Your timing may still help tea influence digestion, but the added sugar changes the health value of the drink.";
+            why = "Because your goal is blood sugar control, extra sugar may reduce the advantage you are trying to gain from the tea itself.";
+            advice = "A simple improvement would be to keep the same timing and switch to less sugar or no sugar. That change alone may make the habit more effective.";
+          } else if (style === "green") {
+            what = "You are drinking green tea during a useful post-meal window for metabolic support.";
+            why = "This timing is often the best fit for people who want tea to participate in the meal response without taking it immediately.";
+            advice = "This is a strong match for your goal. Continue if it suits you, and adjust only if you notice discomfort or if iron intake becomes a concern.";
+          } else {
+            what = "You are drinking black tea while digestion is still active, which allows tea to influence the meal response.";
+            why = "This may support blood sugar control, but black tea can still bring a stronger tannin and caffeine profile than some lighter options.";
+            advice = "This can be a useful pattern for your goal. If you want a softer approach, reduce tea strength before changing the timing.";
+          }
+        } else if (timing === "balanced") {
+          headline = "Your tea is slightly separated from the strongest digestion window";
+          summary = "This timing is more balanced, but it may reduce the direct metabolic effect you are hoping for.";
+          if (style === "strong") {
+            what = "You are drinking strong tea 45 to 60 minutes after the meal, when digestion is already moving forward.";
+            why = "The later timing lowers some of the meal-related trade-off, but the stronger brew still increases overall intensity on the body.";
+            advice = "If blood sugar control is your main priority, you may want to move tea slightly earlier rather than making it stronger. Timing matters more than force.";
+          } else if (style === "light") {
+            what = "You are using a moderate gap after meals and a gentle brew.";
+            why = "This is comfortable and low-pressure, but it may not provide the strongest support for glucose-related goals.";
+            advice = "If you mainly want comfort, this is fine. If you want more direct metabolic support, try moving your tea closer to 30 minutes after meals.";
+          } else if (style === "sugary") {
+            what = "Your tea timing is moderate, but the added sugar still works against your main goal.";
+            why = "A later tea may reduce some meal-related trade-offs, yet the sugar in the drink may make blood sugar support less meaningful.";
+            advice = "The most helpful change here is not the timing — it is reducing the sugar. Once that is improved, you can decide whether you need earlier timing too.";
+          } else if (style === "green") {
+            what = "You are drinking green tea at a balanced time after meals.";
+            why = "This is a gentler, more moderate habit. It may still support general wellness, but its direct post-meal glucose effect may be weaker than earlier tea.";
+            advice = "This is a sensible compromise if you value comfort and routine. If glucose control remains your main focus, shift a little earlier.";
+          } else {
+            what = "You are drinking black tea after a moderate gap, so tea is less tightly linked to the meal response.";
+            why = "This reduces some of the trade-off with the meal, but it also means you may not be getting the full benefit you want for blood sugar support.";
+            advice = "If your goal is specific and intentional, try moving tea closer to the meal before increasing the brew strength.";
+          }
+        } else {
+          headline = "Your tea is arriving too late to strongly shape the meal response";
+          summary = "A longer gap reduces some risks, but it may also reduce the benefit you are seeking for blood sugar control.";
+          if (style === "strong") {
+            what = "You are drinking strong tea more than an hour after eating, when the main post-meal metabolic window has mostly passed.";
+            why = "The stronger brew adds intensity, but it cannot fully replace the effect of earlier timing for blood sugar-related goals.";
+            advice = "If glucose control matters most, move the tea closer to the meal instead of making it stronger. Timing is likely the better adjustment.";
+          } else if (style === "light") {
+            what = "You are drinking a gentle tea clearly away from the meal.";
+            why = "This is comfortable and low-risk, but it is not a strong strategy for post-meal blood sugar support.";
+            advice = "This is acceptable as a tea habit, but if you want a more purposeful metabolic effect, drink it earlier after meals.";
+          } else if (style === "sugary") {
+            what = "Your tea is already too far from the meal to strongly help with post-meal glucose control, and the sugar adds another drawback.";
+            why = "Because both timing and sugar reduce the value of the habit for your goal, you are not getting much benefit from this combination.";
+            advice = "Try changing both factors: move tea earlier and reduce the sugar. That will make the routine much more aligned with your goal.";
+          } else if (style === "green") {
+            what = "You are drinking green tea after a long gap, so the meal and the tea are only loosely connected.";
+            why = "This may still fit a general wellness habit, but it is not the strongest option for post-meal glucose support.";
+            advice = "If you want to keep green tea as your choice, consider moving it closer to the meal — ideally around 30 minutes after eating.";
+          } else {
+            what = "You are drinking black tea well after the meal has moved beyond its main digestion phase.";
+            why = "That reduces some of the meal-related trade-off, but it also weakens the reason for choosing tea as a glucose-support habit.";
+            advice = "The simplest improvement is to drink the same tea earlier, rather than relying on a late cup to support blood sugar control.";
+          }
+        }
+      } else if (goal === "iron") {
+        if (timing === "immediate") {
+          headline = "Your tea is arriving during the most sensitive iron-absorption period";
+          summary = "This is the most difficult timing if protecting iron absorption matters to you.";
+          if (style === "strong") {
+            what = "You are drinking a strong tea right when your body is beginning to absorb nutrients from the meal.";
+            why = "This combination gives tea the best chance to bind with non-heme iron and reduce how much your body can absorb.";
+            advice = "If iron protection is important, this is the first habit to change. Try waiting at least one hour after meals, and avoid strong tea around iron-rich foods.";
+          } else if (style === "light") {
+            what = "You are still drinking tea during the sensitive absorption period, but with a milder brew.";
+            why = "A lighter tea may reduce the intensity of the effect, but it does not fully solve the timing issue.";
+            advice = "If you want to protect iron more carefully, change the timing before anything else. Even a gentle tea can still interfere when it is taken too early.";
+          } else if (style === "sugary") {
+            what = "Your tea is being consumed at the most sensitive time for iron absorption, and the sweetness does not improve that issue.";
+            why = "The main concern here is still timing. Tea compounds can interfere with iron uptake when taken immediately after meals.";
+            advice = "The priority is to create more distance between the meal and the tea. Sugar is secondary here; timing matters much more.";
+          } else if (style === "green") {
+            what = "You are drinking green tea immediately after the meal, while iron absorption is just beginning.";
+            why = "Even though green tea may feel light, it still contains compounds that can interfere with non-heme iron absorption when timed too close to eating.";
+            advice = "If iron is your priority, wait longer after meals. A lighter tea type does not fully protect you if the timing stays too early.";
+          } else {
+            what = "You are drinking black tea right after eating, so tea and dietary iron are meeting in the digestive tract at the same time.";
+            why = "This makes iron interference more likely, especially with plant-based iron sources.";
+            advice = "Move your tea further away from meals. Waiting at least an hour is a much better fit for your goal.";
+          }
+        } else if (timing === "soon") {
+          headline = "Your tea is still fairly close to the meal";
+          summary = "This is somewhat better than immediate tea, but it can still interfere with iron absorption.";
+          if (style === "strong") {
+            what = "You are drinking strong tea about 30 minutes after eating, while nutrient absorption is still active.";
+            why = "The delay helps a little, but a concentrated tea can still increase the chance of iron interference.";
+            advice = "If iron protection matters to you, a stronger brew at 30 minutes is still not ideal. Extend the gap beyond one hour whenever possible.";
+          } else if (style === "light") {
+            what = "You have created a small time gap and chosen a gentler brew.";
+            why = "This lowers the chance of interference compared with strong, immediate tea, but the timing is still relatively close to the meal.";
+            advice = "This is a step in the right direction, but if you want more reliable protection, create a longer gap after meals.";
+          } else if (style === "sugary") {
+            what = "You are taking tea fairly close to the meal, so the timing still overlaps with nutrient absorption.";
+            why = "Sugar does not meaningfully change the iron issue here. The main question is still whether tea is arriving too early.";
+            advice = "The best improvement is to wait longer. Focus on timing before worrying about sweetness.";
+          } else if (style === "green") {
+            what = "You are drinking green tea during a still-active post-meal period.";
+            why = "The slightly delayed timing helps, but tea compounds may still reduce iron absorption when taken this close to food.";
+            advice = "For stronger iron protection, consider moving your green tea to at least one hour after meals.";
+          } else {
+            what = "You are drinking black tea while the meal is still being processed.";
+            why = "This timing may still reduce iron absorption, especially if your meal contains plant-based iron.";
+            advice = "A longer delay would be safer for iron protection. If you keep this timing, at least consider a lighter brew.";
+          }
+        } else if (timing === "balanced") {
+          headline = "Your tea is partly separated from the meal";
+          summary = "This is a compromise position: better for iron than early tea, but not the most protective option.";
+          if (style === "strong") {
+            what = "You have created a moderate gap after the meal, but your tea is still quite concentrated.";
+            why = "The timing lowers the overlap with absorption, although strong tea may still leave more room for interference than a lighter brew.";
+            advice = "This may be acceptable if you want a compromise. If iron protection is very important, extend the gap or reduce the strength.";
+          } else if (style === "light") {
+            what = "You are using a moderate delay and a gentle brew, which makes the tea habit more cautious.";
+            why = "This combination reduces the likelihood of interference compared with earlier or stronger tea.";
+            advice = "This is a reasonable compromise if you still want a post-meal tea habit. If you are actively concerned about iron, waiting longer is even better.";
+          } else if (style === "sugary") {
+            what = "Your tea timing is better than an early tea habit, but the sweetness does not influence the iron issue much.";
+            why = "Because your main concern is iron absorption, timing and tea concentration matter more here than sugar.";
+            advice = "If you want a cleaner habit overall, reduce sugar, but the bigger gain will come from waiting longer after meals.";
+          } else if (style === "green") {
+            what = "You are drinking green tea after a moderate delay, which helps separate tea from the meal.";
+            why = "This is more cautious than drinking tea right away, though a full one-hour gap would still be safer for iron protection.";
+            advice = "This is a workable middle-ground habit. If you belong to a higher-risk group for low iron, consider extending the gap further.";
+          } else {
+            what = "You are drinking black tea at a moderate distance from the meal.";
+            why = "That timing is kinder to iron absorption than earlier tea, but black tea may still feel more robust than a lighter option.";
+            advice = "If your iron status matters a lot, the easiest improvement is to wait longer or switch to a lighter brew.";
+          }
+        } else {
+          headline = "Your tea is well separated from the meal";
+          summary = "This timing is the best overall fit for protecting iron absorption.";
+          if (style === "strong") {
+            what = "You are drinking tea after a clear delay, which helps reduce overlap with iron absorption, even though the brew is strong.";
+            why = "The strong tea still brings a concentrated profile, but the longer gap gives your body more space to absorb nutrients first.";
+            advice = "This is much safer than early tea for iron protection. If you want to be extra cautious, reduce the brew strength slightly.";
+          } else if (style === "light") {
+            what = "You are using a gentle brew and a long delay after meals.";
+            why = "This is one of the most protective combinations for iron absorption because both timing and tea strength are cautious.";
+            advice = "This is an excellent match for your goal. You can continue this pattern with confidence.";
+          } else if (style === "sugary") {
+            what = "You have created a healthy gap after meals, so the main iron issue is largely reduced.";
+            why = "The sweetness does not significantly change iron absorption in this context, although it may affect overall diet quality.";
+            advice = "For iron protection, your timing is doing the important work. If you want the habit to feel healthier overall, you could reduce the sugar gradually.";
+          } else if (style === "green") {
+            what = "You are drinking green tea well after the meal, so nutrient absorption has more time to happen first.";
+            why = "This reduces the chance that tea will interfere with iron uptake from the meal.";
+            advice = "This is a strong match for your goal. There is no urgent need to change it unless another issue, such as caffeine sensitivity, becomes relevant.";
+          } else {
+            what = "You are drinking black tea after a full delay, which gives the meal time to move forward before tea arrives.";
+            why = "That longer gap makes this much more suitable for protecting iron than any earlier tea habit.";
+            advice = "This is a good fit for your goal. If you want to be even more cautious, keep the timing and slightly reduce the brew strength.";
+          }
+        }
+      } else {
+        if (timing === "immediate") {
+          headline = "Your tea is strongly tied to the meal itself";
+          summary = "This can feel satisfying, but it increases both possible benefits and possible trade-offs.";
+          if (style === "strong") {
+            what = "You are drinking strong tea immediately after eating, which creates a very active and intense post-meal pattern.";
+            why = "This may support some digestive or metabolic effects, but it also raises the chance of stomach discomfort, iron interference, and overstimulation.";
+            advice = "If you feel well with this habit, it may still be acceptable. If you notice discomfort, the easiest fix is to weaken the brew or wait a little longer.";
+          } else if (style === "light") {
+            what = "You are keeping tea closely linked to the meal, but with a gentler brew.";
+            why = "This softens the intensity of the habit while preserving the post-meal ritual.";
+            advice = "This can be an acceptable everyday pattern for many healthy people. If you want a more balanced approach, consider shifting slightly later.";
+          } else if (style === "sugary") {
+            what = "Your tea arrives right after the meal, and the added sugar makes the overall habit feel heavier.";
+            why = "This combination may reduce some of the value of tea as a light, balanced post-meal choice.";
+            advice = "The simplest improvement is to reduce the sugar first. After that, consider moving the tea slightly later if you want an even gentler routine.";
+          } else if (style === "green") {
+            what = "You are drinking green tea as an immediate post-meal ritual.";
+            why = "This may feel fresh and pleasant, but it still keeps tea closely involved with digestion and nutrient absorption.";
+            advice = "This is acceptable for many healthy adults, though a later timing may be a little more balanced if you want to reduce trade-offs.";
+          } else {
+            what = "You are drinking black tea right after the meal, which makes tea an immediate part of the post-meal routine.";
+            why = "This is a familiar habit for many people, but it may be a little more stimulating or tannin-heavy than lighter options.";
+            advice = "If this habit feels good to you, it may be fine. If you want to improve balance, try waiting a little longer after meals.";
+          }
+        } else if (timing === "soon") {
+          headline = "Your tea still belongs to the post-meal moment";
+          summary = "This timing preserves the ritual of tea after eating while softening the most intense overlap with digestion.";
+          if (style === "strong") {
+            what = "You are drinking a strong tea around 30 minutes after the meal, which keeps tea close to digestion but not at the very start.";
+            why = "This can feel like a purposeful and satisfying tea habit, though the brew may still be intense for some people.";
+            advice = "This is workable for many healthy adults. If you want a gentler version, keep the timing and make the brew slightly lighter.";
+          } else if (style === "light") {
+            what = "You are using a mild tea with a short but helpful delay after meals.";
+            why = "This creates a balanced routine that still feels like a post-meal habit without pushing the body too hard.";
+            advice = "This is a very practical and sustainable choice. You can keep it as your default everyday routine.";
+          } else if (style === "sugary") {
+            what = "Your tea still feels like part of the meal experience, but the added sugar changes the overall balance.";
+            why = "A small delay helps, yet a sweet tea may make the habit feel less light and less health-focused.";
+            advice = "If you want to strengthen the health value of this routine, reduce the sugar first. The timing is already reasonably workable.";
+          } else if (style === "green") {
+            what = "You are drinking green tea at a time that still feels meaningfully post-meal.";
+            why = "This can support a calm, balanced routine while avoiding the intensity of drinking tea immediately after eating.";
+            advice = "This is a strong everyday choice for many healthy people. There is no strong reason to change it unless your body tells you otherwise.";
+          } else {
+            what = "You are drinking black tea about 30 minutes after the meal, preserving the ritual without making it too immediate.";
+            why = "This is a familiar and often comfortable pattern, though black tea may still feel stronger than a lighter brew.";
+            advice = "This is generally acceptable. If you want a softer version, reduce strength before changing the timing.";
+          }
+        } else if (timing === "balanced") {
+          headline = "Your tea is arriving at a balanced middle point";
+          summary = "This is often the easiest timing to live with because it respects both comfort and caution.";
+          if (style === "strong") {
+            what = "You are drinking a stronger tea after a moderate delay, which gives the meal time to settle before tea arrives.";
+            why = "The timing adds balance, although the strong brew still keeps the experience somewhat intense.";
+            advice = "This is a reasonable compromise. If it ever feels too heavy, keep the timing and reduce the brew strength slightly.";
+          } else if (style === "light") {
+            what = "You are combining one of the most balanced timings with one of the gentlest tea styles.";
+            why = "This lowers the chance of discomfort while keeping the pleasure of a post-meal tea ritual.";
+            advice = "This is one of the best all-around habits for general use. It is practical, gentle, and easy to maintain.";
+          } else if (style === "sugary") {
+            what = "Your timing is balanced, but the sweetness may make the habit feel less clean from a general-health point of view.";
+            why = "The main challenge here is not the timing — it is the extra sugar.";
+            advice = "If you want to improve this habit, start by reducing the sugar. Your timing is already in a good place.";
+          } else if (style === "green") {
+            what = "You are drinking green tea after a helpful delay, which creates a calm and moderate routine.";
+            why = "This gives you a balanced relationship between the meal and the tea, without making the habit feel too intense.";
+            advice = "This is an excellent everyday pattern. You can keep it as a default choice.";
+          } else {
+            what = "You are drinking black tea at a moderate distance from the meal, which often feels both familiar and manageable.";
+            why = "This timing reduces some of the early trade-off while preserving the sense of a real post-meal tea habit.";
+            advice = "This is a strong everyday option. You do not need to change it unless you personally prefer a lighter experience.";
+          }
+        } else {
+          headline = "Your tea is clearly separate from the meal";
+          summary = "This lowers meal-related trade-offs, though it may feel less like a traditional post-meal tea ritual.";
+          if (style === "strong") {
+            what = "You are drinking strong tea after a long delay, so the tea acts more as a separate beverage than as part of digestion.";
+            why = "This reduces meal-related concerns, but strong tea may still feel stimulating, especially later in the day.";
+            advice = "This is generally acceptable. If you are sensitive to caffeine or want a softer routine, keep the timing and lighten the brew.";
+          } else if (style === "light") {
+            what = "You are drinking a gentle tea clearly away from the meal.";
+            why = "This is low-pressure, comfortable, and less likely to interfere with digestion or nutrient absorption.";
+            advice = "This is a calm and safe tea habit. It may be a very good fit if comfort matters more than ritual timing.";
+          } else if (style === "sugary") {
+            what = "Your tea is separate from the meal, so timing is no longer the main issue — overall diet quality is.";
+            why = "The habit is less about digestion now and more about how much added sugar you want in your routine.";
+            advice = "If you want this habit to feel healthier overall, reduce the sugar gradually. The timing itself is not the main concern.";
+          } else if (style === "green") {
+            what = "You are drinking green tea after a clear delay, so it behaves more like a stand-alone wellness drink than a meal companion.";
+            why = "This can feel calm and low-risk, especially if you want a gentle tea habit later in the day.";
+            advice = "This is a fine routine for many healthy adults. Keep it if it suits your schedule and comfort level.";
+          } else {
+            what = "You are drinking black tea well after the meal, which separates the tea from most meal-related trade-offs.";
+            why = "This makes the routine easier on digestion and iron absorption, but black tea may still feel stimulating for some people.";
+            advice = "This is generally safe and manageable. If you drink it late in the day, watch for any effect on sleep.";
+          }
+        }
+      }
+
+      return { risk, headline, summary, what, why, advice, tags };
+    }
+
+    function renderResult() {
+      const data = getResultData();
+
+      resultHeadline.textContent = data.headline;
+      resultSummary.textContent = data.summary;
+      whatText.textContent = data.what;
+      whyText.textContent = data.why;
+      recommendationText.textContent = data.advice;
+
+      riskBadge.textContent = data.risk.level;
+      riskBadge.className = `risk-badge ${data.risk.className}`;
+      riskContext.textContent = data.risk.context;
+
+      teaTags.innerHTML = "";
+      data.tags.forEach(tag => {
+        const span = document.createElement("span");
+        span.className = "tea-tag";
+        span.textContent = tag;
+        teaTags.appendChild(span);
+      });
+
+      previewCard.classList.add("hidden");
+      resultCard.classList.add("visible");
+
+      stepTitle.textContent = "Step 4";
+      questionText.textContent = "Your personalized tea timing result";
+      helperText.textContent = "This result is designed as a simple educational guide, not as personal medical advice.";
+      progressText.textContent = "Step 4 of 4";
+      progressHint.textContent = "Review your personalized feedback";
+      progressFill.style.width = "100%";
+      optionsContainer.innerHTML = "";
+      nextBtn.classList.add("hidden");
+      backBtn.disabled = false;
+      restartBtnLeft.classList.remove("hidden");
+    }
+
+    nextBtn.addEventListener("click", () => {
+      const isLastQuestion = state.currentStep === steps.length - 1;
+      if (isLastQuestion) {
+        renderResult();
+      } else {
+        state.currentStep += 1;
+        renderStep();
+        nextBtn.classList.remove("hidden");
+      }
+    });
+
+    backBtn.addEventListener("click", () => {
+      nextBtn.classList.remove("hidden");
+      if (resultCard.classList.contains("visible")) {
+        state.currentStep = steps.length - 1;
+        renderStep();
+        return;
+      }
+      if (state.currentStep > 0) {
+        state.currentStep -= 1;
+        renderStep();
+      }
+    });
+
+    restartBtnLeft.addEventListener("click", () => {
+      state.currentStep = 0;
+      state.answers = { goal: null, timing: null, style: null };
+      nextBtn.classList.remove("hidden");
+      renderStep();
+    });
+
+    renderStep();
+  </script>
+</body>
+</html>
