@@ -1,75 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tea Timing Project</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Guide To Healthy Tea Drinking</title>
 
-<style>
-body{
-  margin:0;
-  font-family: Arial, sans-serif;
-  background:#f5f1e8;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-}
+  <style>
+    :root{
+      --bg:#f5f1e8;
+      --card:#ffffff;
+      --text:#2e251b;
+      --muted:#6f665c;
+      --border:#432c15;
+      --button:#d8caa8;
+      --button-hover:#c5b48f;
+      --shadow:0 10px 30px rgba(0,0,0,0.10);
+    }
 
-.container{
-  background:white;
-  padding:40px;
-  border-radius:20px;
-  text-align:center;
-  width:420px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.1);
-}
+    *{
+      box-sizing:border-box;
+    }
 
-h1{
-  margin-bottom:10px;
-}
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      padding:24px 16px 32px;
+      text-align:center;
+    }
 
-p{
-  color:#666;
-  margin-bottom:30px;
-}
+    .container{
+      background:var(--card);
+      padding:40px 32px;
+      border-radius:20px;
+      width:min(460px, 100%);
+      box-shadow:var(--shadow);
+    }
 
-.button{
-  display:block;
-  width:100%;
-  padding:14px;
-  margin:12px 0;
-  border:none;
-  border-radius:12px;
-  background:#d8caa8;
-  cursor:pointer;
-  font-size:16px;
-  text-decoration:none;
-  color:black;
-  transition:0.2s;
-}
+    h1{
+      margin:0 0 10px;
+      font-size:clamp(28px, 4vw, 38px);
+      line-height:1.15;
+      color:var(--border);
+      letter-spacing:0.3px;
+    }
 
-.button:hover{
-  background:#c5b48f;
-}
-</style>
+    .subtitle{
+      color:var(--muted);
+      margin:0 0 10px;
+      font-size:15px;
+      line-height:1.6;
+    }
 
+    .authors{
+      color:var(--muted);
+      margin:0 0 10px;
+      font-size:14px;
+    }
+
+    .tagline{
+      color:#999;
+      margin:0 0 24px;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .button{
+      display:block;
+      width:100%;
+      padding:14px 16px;
+      margin:12px 0;
+      border:none;
+      border-radius:12px;
+      background:var(--button);
+      cursor:pointer;
+      font-size:16px;
+      text-decoration:none;
+      color:#000;
+      transition:0.2s ease;
+      box-shadow:0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .button:hover{
+      background:var(--button-hover);
+      transform:translateY(-1px);
+    }
+
+    .footer-wrap{
+      width:min(900px, 100%);
+      margin-top:28px;
+    }
+
+    hr{
+      border:none;
+      border-top:1px solid rgba(67,44,21,0.18);
+      opacity:0.5;
+      margin:0 0 18px;
+    }
+
+    .footer{
+      font-size:12px;
+      color:#777;
+      text-align:center;
+      line-height:1.6;
+      margin:0 auto;
+      padding:0 10px;
+    }
+
+    @media (max-width: 480px){
+      .container{
+        padding:32px 22px;
+      }
+
+      .button{
+        font-size:15px;
+      }
+
+      .footer{
+        font-size:11.5px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="container">
+    <h1>A Guide To Healthy Tea Drinking</h1>
 
-<div class="container">
+    <p class="subtitle">
+      A capstone research project on tea timing and health impact
+    </p>
 
-<h1>Tea Timing Project</h1>
-<p>Select an experience below</p>
+    <p class="authors">
+      Yao Han &amp; Leo Zhang
+    </p>
 
-<a class="button" href="./TeaTimingDecisionTool/">🫖 Interactive Tool</a>
+    <p class="tagline">
+      Interactive tool designed for live presentation engagement
+    </p>
 
-<a class="button" href="./Poster/">📊 View Poster</a>
+    <a class="button" href="./TeaTimingDecisionTool/">🫖 Interactive Tool</a>
+    <a class="button" href="./Poster/">📊 View Poster</a>
+    <a class="button" href="./PaperPreview/">📄 Read Full Paper</a>
+  </div>
 
-<a class="button" href="./PaperPreview/">📄 Read Full Paper</a>
-
-</div>
-
+  <div class="footer-wrap">
+    <hr>
+    <p class="footer">
+      Downloading, copying, or redistribution is discouraged.<br>
+      This poster is provided for viewing only as part of an academic project.<br>
+      This document is based on an academic research project and is provided for educational viewing only.<br>
+      It is not intended as medical advice, diagnosis, or treatment.<br>
+      Please consult a qualified healthcare professional if needed.<br>
+      This project complies with George Brown Polytechnic’s academic integrity and AI use policies.<br>
+      © 2026 Leo Zhang &amp; Han Yao. All rights reserved.
+    </p>
+  </div>
 </body>
 </html>
