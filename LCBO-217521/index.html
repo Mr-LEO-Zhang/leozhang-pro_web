@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LCBO 217521 Wine Tasting Grid | Leo Zhang</title>
+  <meta name="description" content="Wine tasting grid for LCBO product 217521." />
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --card: #fffaf2;
+      --text: #2d241f;
+      --muted: #796b5f;
+      --border: rgba(45, 36, 31, 0.14);
+      --shadow: 0 18px 45px rgba(45, 36, 31, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #fffaf2 0%, var(--bg) 52%, #e9e1d4 100%);
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 16px;
+    }
+
+    main {
+      width: min(1100px, 100%);
+      background: rgba(255, 250, 242, 0.82);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 4vw, 36px);
+      backdrop-filter: blur(8px);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(26px, 5vw, 46px);
+      line-height: 1.08;
+      font-weight: 700;
+    }
+
+    .image-wrap {
+      width: 100%;
+      border-radius: 22px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--border);
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .fallback {
+      padding: 28px;
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    footer {
+      margin-top: 16px;
+      text-align: center;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Wine Tasting Grid</p>
+      <h1>LCBO 217521</h1>
+    </header>
+
+    <section class="image-wrap" aria-label="Wine tasting grid image">
+      <img
+        src="WINE TASTING GRID-LCBO217521_01.png"
+        alt="Wine tasting grid for LCBO 217521"
+        onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<div class=&quot;fallback&quot;>Image file not found.<br>Please place <strong>WINE TASTING GRID-LCBO217521_01.png</strong> in the same folder as this index.html file.</div>');"
+      />
+    </section>
+
+    <footer>leozhang.pro/LCBO-217521/</footer>
+  </main>
+</body>
+</html>
